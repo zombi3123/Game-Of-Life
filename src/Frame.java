@@ -1,13 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Frame extends JPanel implements MouseListener, ActionListener {
+public class Frame extends JPanel implements MouseListener, ActionListener, MouseMotionListener {
     private ArrayList<Cell> columns;
     private ArrayList<ArrayList<Cell>> rows;
     private int cellLength;
@@ -16,11 +13,13 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
     private JButton Start,stop,randomize;
     private Random randNum;
     public Frame(){
+        tm=new Timer(10,this);
         rows=new ArrayList<>();
         columns= new ArrayList<>();
-        this.setSize(new Dimension(900, 900));
-        this.cellLength=3;
+        this.setSize(new Dimension(1750, 1000));
+        this.cellLength=10;
         this.dead=Color.BLACK;
+
         randNum=new Random();
         Start=new JButton("Start");
         stop=new JButton("Stop");
@@ -54,7 +53,7 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
                     for (int j = 0; j < rows.get(0).size(); j++){
                         Cell c=rows.get(i).get(j);
                         float a=randNum.nextFloat();
-                        if (a>0.5) {
+                        if (a>0.9) {
                             c.setAlive();
                         }
                     }
@@ -65,9 +64,10 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
         repaint();
         createMap();
         //startLife()
-        addMouseListener(this);
+        //addMouseListener(this);
+        addMouseMotionListener(this);
         setFocusable(true);
-        tm=new Timer(1,this);
+
         //initComponents();
     }
 
@@ -77,9 +77,9 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
     public void createMap(){
             for(int columsi=0;columsi<getHeight()/cellLength;columsi++){
                 ArrayList<Cell> columns = new ArrayList<>();
-                for(int rowsi=0;rowsi<getHeight()/cellLength;rowsi++){
+                for(int rowsi=0;rowsi<getWidth()/cellLength;rowsi++){
 
-                    Cell c=new Cell(rowsi*(cellLength),columsi*(cellLength),cellLength,false);
+                    Cell c=new Cell(rowsi*(cellLength+1),columsi*(cellLength+1),cellLength,false);
                     columns.add(c);
                     repaint();
                 }
@@ -102,9 +102,9 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
             for (int j = 0; j < rows.get(0).size(); j++){
                 Cell c=rows.get(i).get(j);
                 if (c.isAlive()) {
-                    g.setColor(Color.white);
+                    g.setColor(Color.yellow);
                 } else {
-                    g.setColor(dead);
+                    g.setColor(Color.magenta);
                 }
             c.draw(g);
         }
@@ -113,16 +113,6 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        for (int i = 1; i < rows.size()-1; i++) {
-            for (int j = 1; j < rows.get(0).size()-1; j++){
-                Cell c=rows.get(i).get(j);
-                Cell c1=rows.get(i).get(j+1);
-                if(e.getX()>=c.getTlx()&&e.getX()<c.getTlx()+c.getCellLength()&&e.getY()>= c.getTly()&&e.getY()<c.getTly()+c.getCellLength()){
-                    c.setAlive();
-                    repaint();
-                }
-            }
-        }
 
     }
 
@@ -145,6 +135,7 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -177,6 +168,24 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
         for(Cell c:bornCells){c.setAlive();}
 
 
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        for (int i = 1; i < rows.size()-1; i++) {
+            for (int j = 1; j < rows.get(0).size()-1; j++){
+                Cell c=rows.get(i).get(j);
+                if(e.getX()>=c.getTlx()&&e.getX()<c.getTlx()+c.getCellLength()&&e.getY()>= c.getTly()&&e.getY()<c.getTly()+c.getCellLength()){
+                    c.setAlive();
+                    repaint();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
 
     }
 }
