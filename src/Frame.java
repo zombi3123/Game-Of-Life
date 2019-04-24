@@ -54,7 +54,6 @@ public class Frame extends JPanel implements MouseListener, ActionListener {
                     for (int j = 0; j < rows.get(0).size(); j++){
                         Cell c=rows.get(i).get(j);
                         float a=randNum.nextFloat();
-                        System.out.println(a);
                         if (a>0.5) {
                             c.setAlive();
                         }
