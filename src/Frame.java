@@ -64,7 +64,7 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
         repaint();
         createMap();
         //startLife()
-        //addMouseListener(this);
+        addMouseListener(this);
         addMouseMotionListener(this);
         setFocusable(true);
 
@@ -118,6 +118,15 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
 
     @Override
     public void mousePressed(MouseEvent e) {
+        for (int i = 1; i < rows.size()-1; i++) {
+            for (int j = 1; j < rows.get(0).size()-1; j++){
+                Cell c=rows.get(i).get(j);
+                if(e.getX()>=c.getTlx()&&e.getX()<c.getTlx()+c.getCellLength()&&e.getY()>= c.getTly()&&e.getY()<c.getTly()+c.getCellLength()){
+                    c.setAlive();
+                    repaint();
+                }
+            }
+        }
 
     }
 
