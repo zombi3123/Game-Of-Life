@@ -4,6 +4,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
+//JFrame class
 public class Frame extends JPanel implements MouseListener, ActionListener, MouseMotionListener {
     private ArrayList<Cell> columns;
     private ArrayList<ArrayList<Cell>> rows;
@@ -18,9 +21,9 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
         tm=new Timer(1,this);
         rows=new ArrayList<>();
         columns= new ArrayList<>();
-        this.cellLength=3;
+        this.cellLength=4;
         this.dead=Color.BLACK;
-        this.border=1;
+        this.border=0;
         this.JFrameWidth=JFrameWidth;
         this.JFrameHeight=JFrameHeight;
         this.killCells=false;
@@ -177,9 +180,9 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
             for (int j = 0; j < rows.get(0).size(); j++){
                 Cell c=rows.get(i).get(j);
                 if (c.isAlive()) {
-                    g.setColor(Color.black);
-                } else {
                     g.setColor(Color.white);
+                } else {
+                    g.setColor(Color.black);
                 }
             c.draw(g);
         }
@@ -221,7 +224,7 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
                 for (int j = 0; j < rows.get(0).size()-1; j++){
                     Cell c=rows.get(i).get(j);
                     if(e.getX()>=c.getTlx()&&e.getX()<c.getTlx()+c.getCellLength()&&e.getY()>= c.getTly()&&e.getY()<c.getTly()+c.getCellLength()) {
-                        for (int k = rows.indexOf(c); k < rows.get(0).size()-1; k++){
+                        for (int k = rows.indexOf(c); k < (rows.get(0).size()-1)/10; k++){ //Change k< term to control the length of the line.
                             if(k+j>rows.get(0).size()-1){break outerLoop;}
                             else{rows.get(i).get(j+k).setAlive();}
                             repaint();
@@ -251,17 +254,17 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
     public void actionPerformed(ActionEvent e) {
         ArrayList<Cell> deadCells=new ArrayList<Cell>();
         ArrayList<Cell> bornCells=new ArrayList<Cell>();
-        for (int i = 1; i < rows.size()-1; i++) {
-            for (int j = 1; j < rows.get(0).size()-1; j++){
+        for (int i = 0; i < rows.size()-1; i++) {
+            for (int j = 0; j < rows.get(0).size()-1; j++){
                 Cell c=rows.get(i).get(j);
                 Cell cE=rows.get(i).get(j+1);
-                Cell cW=rows.get(i).get(j-1);
-                Cell cN=rows.get(i-1).get(j);
+                Cell cW=rows.get(i).get(abs(j-1));
+                Cell cN=rows.get(abs(i-1)).get(j);
                 Cell cS=rows.get(i+1).get(j);
-                Cell cNE=rows.get(i-1).get(j+1);
-                Cell cNW=rows.get(i-1).get(j-1);
+                Cell cNE=rows.get(abs(i-1)).get(j+1);
+                Cell cNW=rows.get(abs(i-1)).get(abs(j-1));
                 Cell cSE=rows.get(i+1).get(j+1);
-                Cell cSW=rows.get(i+1).get(j-1);
+                Cell cSW=rows.get(i+1).get(abs(j-1));
                 if(c.isAlive()){
                 if(c.totalNeighbours(cE,cW,cN,cS,cNE,cNW,cSE,cSW)>=4){deadCells.add(c);}
                 if(c.totalNeighbours(cE,cW,cN,cS,cNE,cNW,cSE,cSW)<2){deadCells.add(c);}
@@ -308,5 +311,7 @@ public class Frame extends JPanel implements MouseListener, ActionListener, Mous
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {}
+    public void mouseMoved(MouseEvent e) {
+
+    }
 }
