@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+//JFrame Class
 public class Window extends JFrame {
 
     public Window(int x, int y) {
